@@ -7,13 +7,21 @@ using Xamarin.Forms;
 
 namespace IndoFellowship
 {
+	public static bool IsUserLoggedIn { get; set; }
+	
 	public partial class App : Application
 	{
 		public App ()
 		{
 			InitializeComponent();
-
-			MainPage = new IndoFellowship.MainPage();
+			
+			if (!IsUserLoggedIn) {
+				// Bring user to login
+				MainPage = new NavigationPage (new IndoFellowship ());
+			} else {
+				// Bring user to main page
+				MainPage = new NavigationPage (new IndoFellowship.MainPage());
+			}
 		}
 
 		protected override void OnStart ()
