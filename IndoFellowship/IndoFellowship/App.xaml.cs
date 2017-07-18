@@ -5,37 +5,31 @@ using System.Text;
 
 using Xamarin.Forms;
 
-namespace IndoFellowship
-{
-	public static bool IsUserLoggedIn { get; set; }
-	
-	public partial class App : Application
-	{
-		public App ()
-		{
+namespace IndoFellowship {
+	public partial class App : Application {
+		public static bool IsUserLoggedIn { get; set; }
+
+		public App() {
 			InitializeComponent();
-			
+
 			if (!IsUserLoggedIn) {
 				// Bring user to login
-				MainPage = new NavigationPage (new IndoFellowship ());
+				MainPage = new NavigationPage(new IndoFellowship.Login());
 			} else {
 				// Bring user to main page
-				MainPage = new NavigationPage (new IndoFellowship.MainPage());
+				MainPage = new NavigationPage(new IndoFellowship.MainPage());
 			}
 		}
 
-		protected override void OnStart ()
-		{
+		protected override void OnStart() {
 			// Handle when your app starts
 		}
 
-		protected override void OnSleep ()
-		{
+		protected override void OnSleep() {
 			// Handle when your app sleeps
 		}
 
-		protected override void OnResume ()
-		{
+		protected override void OnResume() {
 			// Handle when your app resumes
 		}
 	}

@@ -12,7 +12,6 @@ namespace IndoFellowship
 		public MainPage()
 		{
 			InitializeComponent();
-            // I am changing something here... and i want this on my branch
 		}
 	}
 }
