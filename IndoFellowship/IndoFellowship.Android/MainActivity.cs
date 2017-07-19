@@ -7,7 +7,10 @@ using Android.Widget;
 using Auth0.OidcClient;
 using IdentityModel.OidcClient;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using Xamarin.Auth;
 
 namespace IndoFellowship.Droid {
 	// Define App icon and name
@@ -31,26 +34,55 @@ namespace IndoFellowship.Droid {
 
 		private Auth0Client client;
 		private Button loginButton;
+		private Button logoutButton;
 		private TextView userDetailsTextView;
 		private AuthorizeState authorizeState;
 		ProgressDialog progress;
+
+		public string UserName {
+			get {
+				var account = AccountStore.Create().FindAccountsForService(App.AppName).FirstOrDefault();
+				return (account != null) ? account.Username : null;
+			}
+		}
+
+
+		public string Token {
+			get {
+				var account = AccountStore.Create(this).FindAccountsForService(App.AppName).FirstOrDefault();
+				return (account != null) ? account.Properties["token"] : null;
+			}
+		}
 
 		protected override void OnCreate(Bundle bundle) {
 			base.OnCreate(bundle);
 			this.SetContentView(Resource.Layout.Main);
 
-			loginButton = this.FindViewById<Button> (Resource.Id.LoginButton);
-			loginButton.Click += LoginButtonOnClick;
+			logoutButton = this.FindViewById<Button>(Resource.Id.LogoutButton);
+			logoutButton.Click += LogoutButtonOnClick;
 
 			userDetailsTextView = FindViewById<TextView>(Resource.Id.UserDetailsTextView);
 			userDetailsTextView.MovementMethod = new ScrollingMovementMethod();
 			userDetailsTextView.Text = String.Empty;
+
+			loginButton = this.FindViewById<Button>(Resource.Id.LoginButton);
+			loginButton.Click += LoginButtonOnClick;
 
 			client = new Auth0Client(new Auth0ClientOptions {
 				Domain = "benedicttobias.auth0.com",
 				ClientId = "IKg1u5Vw5nSxgx401vgYCQNq57R5QRNG",
 				Activity = this
 			});
+
+			if (UserName != null) {
+				userDetailsTextView.Text = "Welcome Back, " + UserName + "!";
+				logoutButton.Visibility = Android.Views.ViewStates.Visible;
+				loginButton.Visibility = Android.Views.ViewStates.Gone;
+			} else {
+				userDetailsTextView.Text = "Please Login";
+				logoutButton.Visibility = Android.Views.ViewStates.Gone;
+				loginButton.Visibility = Android.Views.ViewStates.Visible;
+			}
 		}
 
 		protected override void OnResume() {
@@ -76,16 +108,33 @@ namespace IndoFellowship.Droid {
 				sb.AppendLine($"ID Token: {loginResult.IdentityToken}");
 				sb.AppendLine($"Access Token: {loginResult.AccessToken}");
 				sb.AppendLine($"Refresh Token: {loginResult.RefreshToken}");
-
 				sb.AppendLine();
 
 				sb.AppendLine("-- Claims --");
 				foreach (var claim in loginResult.User.Claims) {
+					if (claim.Type == "nickname") {
+						// Save username and token
+						SaveCredentials(claim.Value, loginResult.AccessToken);
+					}
 					sb.AppendLine($"{claim.Type} = {claim.Value}");
 				}
+
+				// Show logout button
+				logoutButton.Visibility = Android.Views.ViewStates.Visible;
+				loginButton.Visibility = Android.Views.ViewStates.Gone;
 			}
 
 			userDetailsTextView.Text = sb.ToString();
+		}
+
+		public void SaveCredentials(string userName, string token) {
+			if (!string.IsNullOrWhiteSpace(userName) && !string.IsNullOrWhiteSpace(token)) {
+				Account account = new Account {
+					Username = userName
+				};
+				account.Properties.Add("token", token);
+				AccountStore.Create(this).Save(account, App.AppName);
+			}
 		}
 
 		private async void LoginButtonOnClick(object sender, EventArgs eventArgs) {
@@ -105,6 +154,19 @@ namespace IndoFellowship.Droid {
 			var intent = new Intent(Intent.ActionView, uri);
 			intent.AddFlags(ActivityFlags.NoHistory);
 			StartActivity(intent);
+		}
+
+		private void LogoutButtonOnClick(object sender, EventArgs eventArgs) {
+			var account = AccountStore.Create().FindAccountsForService(App.AppName).FirstOrDefault();
+			if (account != null) {
+				AccountStore.Create().Delete(account, App.AppName);
+			}
+
+			userDetailsTextView.Text = string.Empty;
+
+			// Show Login button
+			logoutButton.Visibility = Android.Views.ViewStates.Gone;
+			loginButton.Visibility = Android.Views.ViewStates.Visible;
 		}
 	}
 }

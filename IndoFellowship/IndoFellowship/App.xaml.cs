@@ -2,23 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using Xamarin.Auth;
 using Xamarin.Forms;
 
 namespace IndoFellowship {
 	public partial class App : Application {
 		public static bool IsUserLoggedIn { get; set; }
+		public static string AppName { get; set; }
 
 		public App() {
 			InitializeComponent();
 
-			if (!IsUserLoggedIn) {
-				// Bring user to login
-				MainPage = new NavigationPage(new IndoFellowship.Login());
-			} else {
-				// Bring user to main page
-				MainPage = new NavigationPage(new IndoFellowship.MainPage());
-			}
+			AppName = "indofellowship.android";
 		}
 
 		protected override void OnStart() {
