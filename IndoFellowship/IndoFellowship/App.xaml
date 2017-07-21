@@ -5,13 +5,6 @@
 	<Application.Resources>
 
 		<!-- Application resource dictionary -->
-		<Label 
-		   x:Name="lblMessage"
-		   Text="A simple Label"
-           Font="Large"
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
-
 
 	</Application.Resources>
 </Application>

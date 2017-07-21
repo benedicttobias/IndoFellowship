@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Auth0.OidcClient;
+using IdentityModel.OidcClient;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,11 +10,15 @@ using Xamarin.Forms;
 
 namespace IndoFellowship
 {
-	public partial class MainPage : ContentPage
-	{
+	public partial class MainPage : ContentPage {
 		public MainPage()
 		{
 			InitializeComponent();
+			var browser = new WebView();
+
+			browser.Source = "http://xamarin.com";
+
+			Content = browser;
 		}
 	}
 }

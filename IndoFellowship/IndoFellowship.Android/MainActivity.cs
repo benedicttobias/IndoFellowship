@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Xamarin.Auth;
+using Xamarin.Forms;
 
 namespace IndoFellowship.Droid {
 	// Define App icon and name
@@ -33,8 +34,8 @@ namespace IndoFellowship.Droid {
 	public class MainActivity : Activity {
 
 		private Auth0Client client;
-		private Button loginButton;
-		private Button logoutButton;
+		private Android.Widget.Button loginButton;
+		private Android.Widget.Button logoutButton;
 		private TextView userDetailsTextView;
 		private AuthorizeState authorizeState;
 		ProgressDialog progress;
@@ -46,7 +47,6 @@ namespace IndoFellowship.Droid {
 			}
 		}
 
-
 		public string Token {
 			get {
 				var account = AccountStore.Create(this).FindAccountsForService(App.AppName).FirstOrDefault();
@@ -56,16 +56,16 @@ namespace IndoFellowship.Droid {
 
 		protected override void OnCreate(Bundle bundle) {
 			base.OnCreate(bundle);
-			this.SetContentView(Resource.Layout.Main);
-
-			logoutButton = this.FindViewById<Button>(Resource.Id.LogoutButton);
+			SetContentView(Resource.Layout.Main);
+			
+			logoutButton = this.FindViewById<Android.Widget.Button>(Resource.Id.LogoutButton);
 			logoutButton.Click += LogoutButtonOnClick;
 
 			userDetailsTextView = FindViewById<TextView>(Resource.Id.UserDetailsTextView);
 			userDetailsTextView.MovementMethod = new ScrollingMovementMethod();
 			userDetailsTextView.Text = String.Empty;
 
-			loginButton = this.FindViewById<Button>(Resource.Id.LoginButton);
+			loginButton = this.FindViewById<Android.Widget.Button>(Resource.Id.LoginButton);
 			loginButton.Click += LoginButtonOnClick;
 
 			client = new Auth0Client(new Auth0ClientOptions {
@@ -78,6 +78,14 @@ namespace IndoFellowship.Droid {
 				userDetailsTextView.Text = "Welcome Back, " + UserName + "!";
 				logoutButton.Visibility = Android.Views.ViewStates.Visible;
 				loginButton.Visibility = Android.Views.ViewStates.Gone;
+
+				// Your layout reference
+				LinearLayout mainLayout = (LinearLayout)FindViewById(Resource.Id.mainLayoutID);
+
+				mainLayout.RemoveAllViews();
+
+				StartActivity(typeof(XamarinForm));
+
 			} else {
 				userDetailsTextView.Text = "Please Login";
 				logoutButton.Visibility = Android.Views.ViewStates.Gone;
@@ -119,9 +127,9 @@ namespace IndoFellowship.Droid {
 					sb.AppendLine($"{claim.Type} = {claim.Value}");
 				}
 
-				// Show logout button
-				logoutButton.Visibility = Android.Views.ViewStates.Visible;
-				loginButton.Visibility = Android.Views.ViewStates.Gone;
+				//// Show logout button
+				//logoutButton.Visibility = Android.Views.ViewStates.Visible;
+				//loginButton.Visibility = Android.Views.ViewStates.Gone;
 			}
 
 			userDetailsTextView.Text = sb.ToString();
@@ -162,11 +170,11 @@ namespace IndoFellowship.Droid {
 				AccountStore.Create().Delete(account, App.AppName);
 			}
 
-			userDetailsTextView.Text = string.Empty;
+			//userDetailsTextView.Text = string.Empty;
 
-			// Show Login button
-			logoutButton.Visibility = Android.Views.ViewStates.Gone;
-			loginButton.Visibility = Android.Views.ViewStates.Visible;
+			//// Show Login button
+			//logoutButton.Visibility = Android.Views.ViewStates.Gone;
+			//loginButton.Visibility = Android.Views.ViewStates.Visible;
 		}
 	}
 }

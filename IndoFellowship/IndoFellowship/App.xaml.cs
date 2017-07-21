@@ -2,18 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Xamarin.Auth;
 using Xamarin.Forms;
 
 namespace IndoFellowship {
 	public partial class App : Application {
-		public static bool IsUserLoggedIn { get; set; }
 		public static string AppName { get; set; }
 
 		public App() {
 			InitializeComponent();
 
 			AppName = "indofellowship.android";
+
+			MainPage = new NavigationPage(new MainPage());
+
+			//var tabs = new TabbedPage();
+
+			//tabs.Children.Add(new Event());
+			//tabs.Children.Add(new Birthday());
+
+			//MainPage = tabs;
 		}
 
 		protected override void OnStart() {
