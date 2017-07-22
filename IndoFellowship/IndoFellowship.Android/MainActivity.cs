@@ -40,20 +40,6 @@ namespace IndoFellowship.Droid {
 		private AuthorizeState authorizeState;
 		ProgressDialog progress;
 
-		public string UserName {
-			get {
-				var account = AccountStore.Create().FindAccountsForService(App.AppName).FirstOrDefault();
-				return (account != null) ? account.Username : null;
-			}
-		}
-
-		public string Token {
-			get {
-				var account = AccountStore.Create(this).FindAccountsForService(App.AppName).FirstOrDefault();
-				return (account != null) ? account.Properties["token"] : null;
-			}
-		}
-
 		protected override void OnCreate(Bundle bundle) {
 			base.OnCreate(bundle);
 			SetContentView(Resource.Layout.Main);
@@ -73,18 +59,20 @@ namespace IndoFellowship.Droid {
 				ClientId = "IKg1u5Vw5nSxgx401vgYCQNq57R5QRNG",
 				Activity = this
 			});
+			
+			if (App.AppAccount != null) {
 
-			if (UserName != null) {
-				userDetailsTextView.Text = "Welcome Back, " + UserName + "!";
-				logoutButton.Visibility = Android.Views.ViewStates.Visible;
-				loginButton.Visibility = Android.Views.ViewStates.Gone;
+				userDetailsTextView.Text = "Welcome Back, " + App.AppAccount.Username + "!";
+				//logoutButton.Visibility = Android.Views.ViewStates.Visible;
+				//loginButton.Visibility = Android.Views.ViewStates.Gone;
 
-				// Your layout reference
-				LinearLayout mainLayout = (LinearLayout)FindViewById(Resource.Id.mainLayoutID);
+				//// Your layout reference
+				//LinearLayout mainLayout = (LinearLayout)FindViewById(Resource.Id.mainLayoutID);
 
-				mainLayout.RemoveAllViews();
+				//mainLayout.RemoveAllViews();
 
 				StartActivity(typeof(XamarinForm));
+				Finish();
 
 			} else {
 				userDetailsTextView.Text = "Please Login";
@@ -127,12 +115,11 @@ namespace IndoFellowship.Droid {
 					sb.AppendLine($"{claim.Type} = {claim.Value}");
 				}
 
-				//// Show logout button
-				//logoutButton.Visibility = Android.Views.ViewStates.Visible;
-				//loginButton.Visibility = Android.Views.ViewStates.Gone;
+				StartActivity(typeof(XamarinForm));
+				Finish();
 			}
 
-			userDetailsTextView.Text = sb.ToString();
+			//userDetailsTextView.Text = sb.ToString();
 		}
 
 		public void SaveCredentials(string userName, string token) {
@@ -141,7 +128,8 @@ namespace IndoFellowship.Droid {
 					Username = userName
 				};
 				account.Properties.Add("token", token);
-				AccountStore.Create(this).Save(account, App.AppName);
+
+				App.AppAccount = account;
 			}
 		}
 
@@ -165,16 +153,7 @@ namespace IndoFellowship.Droid {
 		}
 
 		private void LogoutButtonOnClick(object sender, EventArgs eventArgs) {
-			var account = AccountStore.Create().FindAccountsForService(App.AppName).FirstOrDefault();
-			if (account != null) {
-				AccountStore.Create().Delete(account, App.AppName);
-			}
-
-			//userDetailsTextView.Text = string.Empty;
-
-			//// Show Login button
-			//logoutButton.Visibility = Android.Views.ViewStates.Gone;
-			//loginButton.Visibility = Android.Views.ViewStates.Visible;
+			App.RemoveCredentials();
 		}
 	}
 }
