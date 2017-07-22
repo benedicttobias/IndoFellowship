@@ -18,8 +18,11 @@ namespace IndoFellowship
 			InitializeComponent();
 
 			CheckIfLogin();
+
+			Label label = new Label { Text = App.AppAccount.Username.ToString(), BackgroundColor = Color.White, HorizontalOptions = LayoutOptions.Center, VerticalOptions = LayoutOptions.Center, TextColor = Color.Black };
+
 			Button button = new Button {
-				Text = IsLogin.ToString(),
+				Text = "Logout",
 				Font = Font.SystemFontOfSize(NamedSize.Large),
 				BorderWidth = 1,
 				HorizontalOptions = LayoutOptions.Center,
@@ -31,6 +34,7 @@ namespace IndoFellowship
 			this.Content = new StackLayout {
 				Children =
 				{
+					label,
 					button
 				}
 			};
