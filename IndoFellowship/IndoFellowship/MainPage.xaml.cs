@@ -10,57 +10,33 @@ using Xamarin.Forms;
 
 namespace IndoFellowship
 {
-	public partial class MainPage : ContentPage {
+	public partial class MainPage : CarouselPage {
 		public bool IsLogin = false;
 
 		public MainPage()
 		{
 			InitializeComponent();
 
+			NavigationPage.SetHasNavigationBar(this, false);
+			
 			CheckIfLogin();
+			
+			Children.Add(new Event());
+			Children.Add(new Birthday());
+			Children.Add(new News());
+			Children.Add(new Devotion());
+			Children.Add(new Settings());
 
-			Label label = new Label { Text = App.AppAccount.Username.ToString(), BackgroundColor = Color.White, HorizontalOptions = LayoutOptions.Center, VerticalOptions = LayoutOptions.Center, TextColor = Color.Black };
-
-			Button button = new Button {
-				Text = "Logout",
-				Font = Font.SystemFontOfSize(NamedSize.Large),
-				BorderWidth = 1,
-				HorizontalOptions = LayoutOptions.Center,
-				VerticalOptions = LayoutOptions.CenterAndExpand
-			};
-			button.Clicked += OnButtonClicked;
-
-			// Build the page.
-			this.Content = new StackLayout {
-				Children =
-				{
-					label,
-					button
-				}
-			};
 		}
 
 		private void CheckIfLogin() {
 			Account account = App.AppAccount;
 			if (account != null) {
 				IsLogin = true;
-				ShowMessage("account registered");
+				//ShowMessage("account registered");
 			} else {
 				IsLogin = false;
-				ShowMessage("account not registered");
-			}
-		}
-
-		void OnButtonClicked(object sender, EventArgs e) {
-			App.RemoveCredentials();
-			ShowMessage("account deleted");
-			switch (Device.RuntimePlatform) {
-				case Device.iOS:
-					//iOS.OS.Process.KillProcess(iOS.OS.Process.MyPid());
-					break;
-				case Device.Android:
-					Android.OS.Process.KillProcess(Android.OS.Process.MyPid());
-					break;
+				//ShowMessage("account not registered");
 			}
 		}
 
