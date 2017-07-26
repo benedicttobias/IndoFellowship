@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "804704293074",
+    "firebase_url": "https://chickenpanini-9c269.firebaseio.com",
+    "project_id": "chickenpanini-9c269",
+    "storage_bucket": "chickenpanini-9c269.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:804704293074:android:fd429ea3f24446d8",
+        "android_client_info": {
+          "package_name": "indofellowship.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "804704293074-jdkj0kgubl5rb9u07a0ak2n6opv0e3i1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAckfBvmE-1yvjWQtndA_jK7KgAQzDsDss"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
